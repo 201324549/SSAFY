@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mappers/gueset.xml -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mcr.dao.UserDao">
+
+	<!-- insert 처리 -->
+	<insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="userNo">
+		insert into user( 
+						userid	,
+						pw,
+						birthday,
+						gender,
+						nation,
+						city,
+						role
+				)
+				select  #{userid},
+						#{pw},
+						#{birthday},
+						#{gender},
+						#{nation},
+						#{city},
+						#{role}
+				FROM dual		
+				WHERE NOT EXISTS (
+                        SELECT userid
+                 FROM user
+                 WHERE userid = #{userid}
+            )
+	</insert>
+	
+	<!-- udpate 처리 -->
+	<update id="updateUser" parameterType="User">
+		update user 
+		   set 
+		   	   	userid = #{userid},
+			   	pw = #{pw},
+			   	birthday = #{birthday},
+			   	gender = #{gender},
+				nation = #{nation},
+				city = #{city},
+				role = #{role}
+		 where 
+		 	   user_no = #{userNo}
+	</update>
+	
+	<!-- delete 처리 -->
+	<delete id="deleteUser" parameterType="String">
+		delete 
+			from user 
+		where 
+			userid = #{userId} and 
+		 	pw = #{pw}
+	</delete>
+	
+	<!-- id으로 select 처리 -->
+	<select id="selectUserById" parameterType="string" resultType="User">
+		select 
+			* 
+		  from 
+		  	user 
+		 where 
+		 	userid = #{userid} 
+	</select>
+	
+	<!-- No으로 select 처리 -->
+	<select id="selectUserByNo" parameterType="Integer" resultType="User">
+		select 
+			* 
+		  from 
+		  	user 
+		 where 
+		 	user_no = #{userNo} 
+	</select>
+	
+	<!-- id으로 select 처리 -->
+	<select id="selectUserByIdAndPwd" parameterType="string" resultType="User">
+		select 
+			* 
+		  from 
+		  	user 
+		 where 
+		 	userid = #{userid} and pw = #{pw}
+	</select>
+</mapper>
+
